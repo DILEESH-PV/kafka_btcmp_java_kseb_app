@@ -96,7 +96,28 @@ public class Kseb {
 
                     break;
                 case 4:
-                    System.out.println("Update a Consumer");
+                    System.out.println("Selected update a Consumer");
+                    System.out.println("Enter the consumer id");
+                    consumerid=sc.nextInt();
+                    System.out.println("Enter the consumer name to be updated");
+                    name=sc.next();
+                    System.out.println("Enter the address of consumer to be updated");
+                    address=sc.next();
+                    System.out.println("Enter the phone number to be updated");
+                    phone=sc.next();
+                    System.out.println("Enter the email to be updated");
+                    email=sc.next();
+                    try {
+                        Class.forName("com.mysql.jdbc.Driver");
+                        Connection con = DriverManager.getConnection("jdbc:mysql://localhost:3306/ksebdb", "root", "");
+                        String sql = "UPDATE `consumer` SET `name`='"+name+"',`address`='"+address+"',`phone`='"+phone+"',`email`='"+email+"' WHERE `consumerid` = "+consumerid;
+                        Statement stmt = con.createStatement();
+                        stmt.executeUpdate(sql);
+                        System.out.println("updated successfully");
+                    }
+                    catch (Exception e){
+                        System.out.println(e);}
+
                     break;
                 case 5:
                     System.out.println("View all Consumers");
