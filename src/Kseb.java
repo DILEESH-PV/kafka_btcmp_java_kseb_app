@@ -121,6 +121,28 @@ public class Kseb {
                     break;
                 case 5:
                     System.out.println("View all Consumers");
+                    try{
+                        Class.forName("com.mysql.jdbc.Driver");
+                        Connection con=DriverManager.getConnection("jdbc:mysql://localhost:3306/ksebdb","root","");
+                        String sql="SELECT `consumerid`, `name`, `address`, `phone`, `email` FROM `consumer` ";
+                        Statement stmt=con.createStatement();
+                        ResultSet rs=stmt.executeQuery(sql);
+                        while (rs.next())
+                        {
+                            String getCode=rs.getString("consumerid");
+                            String getName=rs.getString("name");
+                            String getAddress=rs.getString("address");
+                            String getPhno=rs.getString("phone");
+                            String getEmail=rs.getString("email");
+                            System.out.println("Consumer ID    : "+getCode);
+                            System.out.println("Consumer Name  : "+getName);
+                            System.out.println("Address        : "+getAddress);
+                            System.out.println("Phone Number   : "+getPhno);
+                            System.out.println("Email          : "+getEmail+"\n");
+                        }
+                    }catch (Exception e){
+                        System.out.println(e);}
+
                     break;
                 case 6:
                     System.out.println("Generate Bill");
