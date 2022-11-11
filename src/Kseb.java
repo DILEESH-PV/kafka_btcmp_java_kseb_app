@@ -196,10 +196,48 @@ public class Kseb {
                     catch(Exception e){
                         System.out.println(e);
                     }
-
+                    System.out.println("\nSuccessfully Generated Consumer Bill");
                     break;
                 case 7:
-                    System.out.println("View Bill");
+                    System.out.println("Selected view Bill");
+                    try
+                       {
+                           Class.forName("com.mysql.jdbc.Driver");
+                           Connection con = DriverManager.getConnection("jdbc:mysql://localhost:3306/ksebdb", "root", "");
+                           String sql = "SELECT b.`consumerid`, b.`month`, b.`year`, b.`bill`, b.`paidstatus`, b.`date`, b.`totalunits`, b.`duedate`, b.`invoice`, c.`name`, c.`address` FROM bill b JOIN consumer c ON b.consumerid=c.id";
+                           Statement stmt=con.createStatement();
+                           ResultSet rs=stmt.executeQuery(sql);
+                           while (rs.next())
+                           {
+                               String getCode=rs.getString("consumerid");
+                               String getMonth=rs.getString("month");
+                               String getYear=rs.getString("year");
+                               String getBill=rs.getString("bill");
+                               String getPaid=rs.getString("paidstatus");
+                               String getDate=rs.getString("date");
+                               String getUnits=rs.getString("totalunits");
+                               String getDue=rs.getString("duedate");
+                               String getInvoice=rs.getString("invoice");
+                               String getName=rs.getString("name");
+                               String getAddress=rs.getString("address");
+
+                               System.out.println("Consumer ID    : "+getCode);
+                               System.out.println("Month          : "+getMonth);
+                               System.out.println("Year           : "+getYear);
+                               System.out.println("Amount         : "+getBill);
+                               System.out.println("Paid Status    : "+getPaid);
+                               System.out.println("Bill Date      : "+getDate);
+                               System.out.println("Total Units    : "+getUnits);
+                               System.out.println("Due Date       : "+getDue);
+                               System.out.println("Invoice        : "+getInvoice);
+                               System.out.println("Consumer Name  : "+getName);
+                               System.out.println("Address        : "+getAddress+"\n");
+                           }
+                       }
+                    catch (Exception e)
+                      {
+                          System.out.println(e);
+                      }
                     break;
                 case 8:
                     System.out.println("Top two high bill paying consumers");
