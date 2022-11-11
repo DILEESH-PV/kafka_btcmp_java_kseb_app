@@ -240,7 +240,30 @@ public class Kseb {
                       }
                     break;
                 case 8:
-                    System.out.println("Top two high bill paying consumers");
+                    System.out.println("Selected Top two high bill paying consumers");
+                    try {
+                        Class.forName("com.mysql.jdbc.Driver");
+                        Connection con = DriverManager.getConnection("jdbc:mysql://localhost:3306/ksebdb", "root", "");
+                        String sql = "SELECT c.`name`,c.`address`,b.`totalunits`,b.`bill` FROM bill b JOIN consumer c ON b.consumerid = c.id GROUP BY `bill` ORDER BY `bill` DESC LIMIT 2";
+                        Statement stmt = con.createStatement();
+                        ResultSet rs = stmt.executeQuery(sql);
+                        while (rs.next()) {
+                            String getName = rs.getString("name");
+                            String getAddress = rs.getString("address");
+                            String getUnits = rs.getString("totalunits");
+                            String getBill = rs.getString("bill");
+
+                            System.out.println("Consumer Name  : " + getName);
+                            System.out.println("Address        : " + getAddress);
+                            System.out.println("Total Units    : " + getUnits);
+                            System.out.println("Amount         : " + getBill+"\n\n");
+                        }
+                    }
+                    catch (Exception e)
+                    {
+                        System.out.println(e);
+                    }
+
                     break;
                 case 9:
                     System.out.println("Exit");
