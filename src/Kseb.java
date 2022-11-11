@@ -1,5 +1,8 @@
 import java.sql.*;
+import java.util.Calendar;
+import java.util.GregorianCalendar;
 import java.util.Scanner;
+
 
 public class Kseb {
     public static void main(String[] args) {
@@ -145,7 +148,55 @@ public class Kseb {
 
                     break;
                 case 6:
-                    System.out.println("Generate Bill");
+                    System.out.println("Selected bill generation");
+                    GregorianCalendar date = new GregorianCalendar();
+                    int cMonth = date.get(Calendar.MONTH);
+                    int cYear = date.get(Calendar.YEAR);
+                    cMonth = cMonth+1;
+                    System.out.println("Current month is  " + cMonth);
+                    System.out.println("Current year is  " + cYear);
+                    try {
+                        Class.forName("com.mysql.jdbc.Driver");
+                        Connection con = DriverManager.getConnection("jdbc:mysql://localhost:3306/ksebdb", "root", "");
+                        String sql = "DELETE FROM `bill` WHERE `month`= '" + cMonth + "'AND `year`= '" + cYear + "'";
+                        Statement stmt = con.createStatement();
+                        stmt.executeUpdate(sql);
+                        String sql1 = "SELECT `id` FROM `consumer` ";
+                        Statement stmt1 = con.createStatement();
+                        ResultSet rs = stmt1.executeQuery(sql1);
+                        while (rs.next())
+                          {
+                            int id = rs.getInt("id");
+                            String sql2 = "select SUM(`unit`) from usages where month(date) = '"+cMonth+"' AND year(date) = '"+cYear+"' AND `consumerid` ='"+id+"'";
+                            Statement stmt2 = con.createStatement();
+                            ResultSet rs1 = stmt2.executeQuery(sql2);
+                            while (rs1.next())
+                              {
+                                int add = rs1.getInt("SUM(`Unit`)");
+                                int status = 0;
+                                int totalBill = add * 5;
+                          // Random number generating section
+                                int min = 10000;
+                                int max = 99999;
+                                int invoice = (int)(Math.random() * (max - min + 1) + min);
+                                String sql3 = "INSERT INTO `bill`(`consumerid`, `month`, `year`, `bill`, `paidstatus`, `date`, `totalunits`, `duedate`, `invoice`) VALUES (?,?,?,?,?,now(),?,now()+ interval 14 day,?)";
+                                PreparedStatement stmt3 = con.prepareStatement(sql3);
+                                stmt3.setInt(1, id);
+                                stmt3.setInt(2, cMonth);
+                                stmt3.setInt(3, cYear);
+                                stmt3.setInt(4, totalBill);
+                                stmt3.setInt(5, 0);
+                                stmt3.setInt(6, add);
+                                stmt3.setInt(7,invoice );
+                                stmt3.executeUpdate();
+                            }
+                        }
+
+                    }
+                    catch(Exception e){
+                        System.out.println(e);
+                    }
+
                     break;
                 case 7:
                     System.out.println("View Bill");
